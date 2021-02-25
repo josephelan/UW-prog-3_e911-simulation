@@ -1,12 +1,12 @@
 /**
  * @file       Event.cpp
- * @brief      
- * 
- * @details    
- * 
+ * @brief
+ *
+ * @details
+ *
  * @author     Joseph Lan
  * @date       23 February 2021
- * 
+ *
  * CSS 343 D
  * Program #3 E911 Discrete Simulation
  * Prof. Stiber
