@@ -30,34 +30,29 @@ class Simulation {
 
    /**
    * @brief    Constructor initializes a simulation with no events, simulating
-   *           a 911 PSAP with no calls. Sets the number of call takers to input param.
+   *           a 911 PSAP with no calls. Sets the number of call takers to
+   *           input param.
    *
    * @pre      n/a
-   * @post     Object Initialized
+   * @post     object initialized, values are by passed in parameter or
+   *           initialized as follows:
+   *              eventQueue_: empty
+   *              waitingList_: empty
+   *              timeInSeconds_: 0
+   *              numCallTakers_: by parameter
+   *              numCallTakersAvailable: same as
+   *              totalServiceTimes_: empty
+   *              averageTotalServiceTime_: 0
    *
    * @param    numCallTakers number of CTakers for scenario
    * @param    events events to enqueue into priority queue
    *
    * Significant function calls:
-   * n/a
+   * populateEventQueue()
    */
    Simulation(int numCallTakers, std::vector<Event> events);
 
    // actions
-
-   /**
-   * @brief    Populates the simulations event queue from a vector of events
-   *
-   * @pre      Only allows this to be run once per simulation
-   * @post     Simulation resizes the heap and adds all the events in order to
-   *           the simulations priority queue
-   *
-   * @param    events vector of events for the scenario
-   *
-   * Significant function calls:
-   * EventPriorityQueue::push()
-   */
-   void populateEventQueue(std::vector<Event> events);
 
    /**
    * @brief    Runs the simulation through all the events and calculating the
@@ -128,6 +123,20 @@ class Simulation {
    // helpers
 
    /**
+   * @brief    Populates the simulations event queue from a vector of events
+   *
+   * @pre      Only allows this to be run once per simulation
+   * @post     Simulation resizes the heap and adds all the events in order to
+   *           the simulations priority queue
+   *
+   * @param    events vector of events for the scenario
+   *
+   * Significant function calls:
+   * EventPriorityQueue::push()
+   */
+   void populateEventQueue(std::vector<Event> events);
+
+   /**
    * @brief    helper that handles a call-event dequeue situation by either
    *           creating a SE event and pushing it onto the priority queue or
    *           pushing it onto the the waitlist if no calltakers are available
@@ -136,13 +145,13 @@ class Simulation {
    * @post     Either creates a SE event for the given call or pushes it into
    *           the event queue or places the CE onto the waitlist.
    *
-   * @param    event the event to handle
+   * @param    inEvent the event to handle
    *
    * Significant function calls:
    * handleAvailableCallTaker()
    * handleNoAvailableCallTaker()
    */
-   void handleCallEvent(Event event);
+   void handleCallEvent(Event inEvent);
 
    /**
    * @brief    Helper that handles the event that a CE is dequeued from event
@@ -152,13 +161,13 @@ class Simulation {
    * @post     numCallTakersAvailable_ decrement by one (busy server) service
    *           event is created and pushed onto priority queue
    *
-   * @param    event the event to handle
+   * @param    inEvent the event to handle
    *
    *
    * Significant function calls:
    * Event::createEndEvent()
    */
-   void handleAvailableCallTaker(Event event);
+   void handleAvailableCallTaker(Event inEvent);
 
    /**
    * @brief    Helper that handles the event that a CE is dequeued from event
@@ -167,12 +176,12 @@ class Simulation {
    * @pre      numCallTakersAvailable_ == 0
    * @post     Event is pushed onto waiting list
    *
-   * @param    event the event to handle
+   * @param    inEvent the event to handle
    *
    * Significant function calls:
    * n/a
    */
-   void handleNoAvailableCallTaker(Event event);
+   void handleNoAvailableCallTaker(Event inEvent);
 
    /**
    * @brief    Helper that handles the event that SE is dequeued from the event
@@ -183,12 +192,12 @@ class Simulation {
    *           collected data used to calculate averageTotalServiceTime if
    *           deemed valid
    *
-   * @param    event the event to handle
+   * @param    inEvent the event to handle
    *
    * Significant function calls:
    * UpdateEvent()
    */
-   void handleServiceEndEvent(Event event);
+   void handleServiceEndEvent(Event inEvent);
 
    /**
    * @brief    Helper function that updates / validates trivial information
@@ -198,12 +207,12 @@ class Simulation {
    * @pre      event has just been deq from event queue
    * @post     Event times are updated and validated
    *
-   * @param    event the event to update and validate
+   * @param    inEvent the event to update and validate
    *
    * Significant function calls:
    * n/a
    */
-   void updateEvent(Event event);
+   void updateEvent(Event inEvent);
 
    /**
    * @brief    updates totalServiceTimes_ with data from the event
@@ -211,12 +220,12 @@ class Simulation {
    * @pre      Assumes the event has been determined to be valid
    * @post     totalServiceTimes_ adds integer value for TST to its vector
    *
-   * @param    event to add TST to array of TSTs
+   * @param    inEvent to add TST to array of TSTs
    *
    * Significant function calls:
    * n/a
    */
-   void updateTotalServiceTimes(Event event);
+   void updateTotalServiceTimes(Event inEvent);
 
    /**
    * @brief    calculates the average total service time based on data in

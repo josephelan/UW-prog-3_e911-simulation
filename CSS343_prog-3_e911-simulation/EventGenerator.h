@@ -72,17 +72,14 @@ class EventGenerator {
    // vector of all the generated events
    std::vector<Event> events_;
 
-   // generator object used to generate values
-   std::default_random_engine generator_;
+   // constant for average real calls per hour
+   int averageRealCallsPerSecond_;
 
-   // uniform distribution object for bot call place times
-   std::uniform_int_distribution<int> botCallTimeDistribution_;
+   // constant for average service time
+   double lambdaC;
 
-   // exponential distribution for legitimate call place time intervals
-   std::exponential_distribution<double> realCallTimeDistribution_;
-
-   // exponential distribution for legitimate call service times
-   std::exponential_distribution<double> realCallServiceLengthDistribution_;
+   // number of bots
+   int numBots_;
 
    //helpers
 
@@ -92,42 +89,38 @@ class EventGenerator {
    * @pre      n/a
    * @post     Event vector populated
    *
+   * @param    numBots the number of bots to create for this simulation
+   *
    * Significant function calls:
-   * n/a
+   * getCallPlaceInterval()
+   * getCallserviceTime()
    */
    void generateEvents();
 
    /**
-   * @brief    Initializes the scenario’s distributions
-   *
-   * @pre      Assumes member variables set properly by object initialization
-   * @post     Object distribution members properly set
-   *
-   * @param    averageRealCallsPerHour avg # of calls/hr, for distrib
-   * @param    averageReaclCallServiceTime avg service time, for distrib
-   * @param    numBots
-   *
-   * Significant function calls:
-   * n/a
-   */
-   void initializeDistributions(int averageRealCallsPerHour,
-                                int averageRealCallServiceTime,
-                                int numBots);
-
-   /**
-   * @brief    Returns true if the Event MINIMUM call time + service time will
-   *           end within time 3600. Also, false if service time is 3600 or greater
+   * @brief    set average real calls per second
    *
    * @pre      n/a
-   * @post     No state change. Returns bool
+   * @post     set average real calls per second to per hour / 3600
    *
-   * @param    event the event to check for validity
-   *
-   * @return   True if event min call time + service time <= 3600 seconds and
-   *           service time <= 3600
+   * @param    average real calls per hour
    *
    * Significant function calls:
    * n/a
    */
-   bool isValidEvent(Event& event) const;
+   void setAverageRealCallsPerSecond(int averageRealCallsPerHour);
+
+   /**
+   * @brief    set lambdaC
+   *
+   * @pre      n/a
+   * @post     set lambdaC, service rate by 1 / averageRealServiceTime
+   *
+   * @param    averageReaclCallServiceTime
+   *
+   * Significant function calls:
+   * getCallPlaceInterval()
+   * getCallserviceTime()
+   */
+   void setLamdaC(int averageRealCallServiceTime);
 };

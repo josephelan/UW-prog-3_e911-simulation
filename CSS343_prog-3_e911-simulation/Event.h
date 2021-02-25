@@ -28,17 +28,17 @@ class Event {
    *           a legimimate call or a bot, is a call-event or service-end, and
    *           the Service time length of the event.
    *
-   * @pre      Assumes the input parameters are correct. Assumes that service-time
-   *           is less than 3600 seconds
+   * @pre      Assumes the input parameters are correct. Assumes that
+   *           service-time is less than 3600 seconds
    * @post     Event object initialized, values are by passed in parameter or
    *           initialized as follows:
    *              isReal_: By parameter
    *              isCallPlaceEvent_: By parameter
    *              isValidTime_: True
-   *              callTime_: By
-   *              serviceTime_: By
-   *              waitTime_:
-   *              endTime_: -
+   *              callTime_: By parameter
+   *              serviceTime_: By parameter
+   *              waitTime_: -1
+   *              endTime_: -1
    *              totalServiceTime_: -1
    *
    * @param    isReal         true if legitimate caller
@@ -96,7 +96,7 @@ class Event {
    * Significant function calls:
    * n/a
    */
-   bool isCallEvent() const;
+   bool isCallPlaceEvent() const;
 
    /**
    * @brief    Returns the call time of the event
@@ -201,6 +201,19 @@ class Event {
    void setEndTime(int time);
 
    /**
+    * @brief   sets new call time for service end event
+    *
+    * @pre     n/a
+    * @post    new call time set for service end event creation
+    *
+    * @param   time of new call time
+    *
+    * Significant Function Calls:
+    * n/a
+    */
+   void setNewCallTime(int time);
+
+   /**
    * @brief    Creates the associated service-end event version of this call
    *           event
    *
@@ -211,7 +224,7 @@ class Event {
    * @return   Event object initialized with values:
    *              isReal_: Same as this->
    *              isCallPlaceEvent_: false
-   *              isValidTime_: True
+   *              isValidTime_: true
    *              callTime_: Same as this->
    *              serviceTime_: Same as this->
    *              waitTime_: time from call place time to time now
@@ -222,6 +235,23 @@ class Event {
    * Event()
    */
    Event createEndEvent() const;
+
+   // operator overloads
+
+   /**
+    * @brief   return true if Event callTime is less than  is less than
+    *          call time of rhs Event
+    *
+    * @pre     n/a
+    * @post    no state change. Returns bool
+    *
+    * @param   rhs compared event object
+    * @return  true if rhs callTime is later than calling object
+    *
+    * Significant Function Calls:
+    * n/a
+    */
+   bool operator<(const Event& rhs) const;
 
    private:
 
@@ -268,14 +298,14 @@ class Event {
    * Significant function calls:
    * calculateValidity()
    */
-   void setTotalServiceTime();
+   void setTotalServiceTime(int totalServiceTime);
 
    /**
    * @brief    Sets isValidTime_ to true if the call time and end time are both
    *           within time 0 to time 3600
    *
    * @pre      n/a
-   * @post     Sets isValidTime_ to true if call & end time both within time 0 to 3600
+   * @post     Sets isValidTime_ to true if end time within time 0 to 3600
    *
    * Significant function calls:
    * n/a

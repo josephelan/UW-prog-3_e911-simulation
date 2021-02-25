@@ -86,6 +86,7 @@ class EventPriorityQueue {
    *
    * Significant function calls:
    * rebuildHeap()
+   * swap()
    */
    Event pop();
 
@@ -100,6 +101,7 @@ class EventPriorityQueue {
    int maxSize_;
 
    // number of events in the heap
+   // also the index of the next empty
    int numEvents_;
 
    // the heap used to implement the priority queue
@@ -113,14 +115,14 @@ class EventPriorityQueue {
    * @pre      assumes calling index is not a leaf
    * @post     no state change. Returns integer
    *
-   * @param    parentIndex index of the parent
+   * @param    index index of the parent
    *
    * @return   index of left child
    *
    * Significant function calls:
    * n/a
    */
-   int getLeftChildIndex(int parentIndex) const;
+   int getLeftChildIndex(int index) const;
 
    /**
    * @brief    Helper function returns right child index of given index
@@ -128,14 +130,14 @@ class EventPriorityQueue {
    * @pre      Assumes calling index is not a leaf
    * @post     no state change. Returns integer
    *
-   * @param    parentIndex index of the parent
+   * @param    index index of the parent
    *
    * @return   index of right child
    *
    * Significant function calls:
    * n/a
    */
-   int getRightChildIndex(int parentIndex) const;
+   int getRightChildIndex(int index) const;
 
    /**
    * @brief    Returns parent index of the child
@@ -144,6 +146,7 @@ class EventPriorityQueue {
    * @post     no state change. Returns integer
    *
    * @param    index index of this index obj you are looking for the parent of
+   *
    * @return   index of the parent
    *
    * Significant function calls:
@@ -157,12 +160,14 @@ class EventPriorityQueue {
    * @pre      n/a
    * @post     no state change. Returns bool
    *
+   * @param    index of item to check
+   *
    * @return   true if the given index position in the heap is a leaf
    *
    * Significant function calls:
    * n/a
    */
-   bool isLeaf() const;
+   bool isLeaf(int index) const;
 
    /**
    * @brief    Helper functions that fixes an unorganized heap
@@ -177,4 +182,18 @@ class EventPriorityQueue {
    * getRightChildIndex()
    */
    void rebuildHeap(int index);
+
+   /**
+    * @brief   Switches the elements at the given index
+    *
+    * @pre     n/a
+    * @post    Elements are swapped
+    *
+    * @param   indexOne element of first index to swap
+    * @param   indexTwo element of second index to swap
+    *
+    * Significant Function Calls:
+    * n/a
+    */
+   bool swap(int indexOne, int indexTwo);
 };
